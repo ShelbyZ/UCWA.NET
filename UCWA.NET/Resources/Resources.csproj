@@ -36,7 +36,12 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Autodiscovery.cs" />
+    <Compile Include="Applications.cs" />
+    <Compile Include="Root.cs" />
+    <Compile Include="AuthToken.cs" />
+    <Compile Include="Autodiscover.cs" />
+    <Compile Include="Challenge.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="HrefObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -4,17 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{62B02E3E-D101-4D17-8415-DFCB770C3CD0}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{3333EC5A-EB99-4E84-AD1D-E23EF575C092}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>UCWA.NET.Console</RootNamespace>
-    <AssemblyName>UCWA.NET.Console</AssemblyName>
+    <RootNamespace>UCWA.NET.Core</RootNamespace>
+    <AssemblyName>UCWA.NET.Core</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -38,24 +35,17 @@
     <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="Authentication.cs" />
+    <Compile Include="AuthenticationException.cs" />
+    <Compile Include="Credentials.cs" />
+    <Compile Include="Discovery.cs" />
+    <Compile Include="DiscoveryException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Core\Core.csproj">
-      <Project>{3333ec5a-eb99-4e84-ad1d-e23ef575c092}</Project>
-      <Name>Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Resources\Resources.csproj">
       <Project>{f8d4ce45-c24e-4b5f-b542-23a62fbfc737}</Project>
       <Name>Resources</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SimpleTransport\SimpleTransport.csproj">
-      <Project>{a02296fc-9455-4734-ab35-62a05f5e9b4c}</Project>
-      <Name>SimpleTransport</Name>
     </ProjectReference>
     <ProjectReference Include="..\Transport\Transport.csproj">
       <Project>{d62dd1f5-ba71-4831-b51f-8068a483eea7}</Project>
