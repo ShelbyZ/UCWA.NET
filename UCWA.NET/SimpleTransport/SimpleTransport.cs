@@ -7,19 +7,32 @@ namespace UCWA.NET.SimpleTransport
     {
         public Response ExecuteRequest(Request request)
         {
-            var temp = WebRequest.CreateHttp(request.Uri);
+            var obj = WebRequest.CreateHttp(request.Uri);
+            obj.Method = request.Method.ToString();
+
+            if (request.Credentials != null)
+            {
+                obj.Credentials = request.Credentials;
+            }
 
             if (request.Headers != null)
             {
                 foreach (var item in request.Headers)
                 {
-                    temp.Headers.Add(item.Key, item.Value);
+                    if (item.Key == "Content-Type")
+                    {
+                        obj.ContentType = item.Value;
+                    }
+                    else
+                    {
+                        obj.Headers.Add(item.Key, item.Value);
+                    }
                 }
             }
 
             if (request.Data != null)
             {
-                using (var stream = temp.GetRequestStream())
+                using (var stream = obj.GetRequestStream())
                 {
                     if (stream != null)
                     {
@@ -30,35 +43,45 @@ namespace UCWA.NET.SimpleTransport
 
             try
             {
-                var result = temp.GetResponse() as HttpWebResponse;
-                var response = new Response
-                {
-                    Uri = result.ResponseUri,
-                    StatusCode = result.StatusCode,
-                };
-
-                using (var stream = result.GetResponseStream())
-                {
-                    if (stream != null && result.ContentLength != 0)
-                    {
-                        var bytes = new byte[result.ContentLength];
-                        stream.Read(bytes, 0, (int)result.ContentLength);
-
-                        response.Data = bytes;
-                    }
-                }
-
-                foreach (var item in result.Headers.AllKeys)
-                {
-                    response.Headers.Add(item, result.Headers[item]);
-                }
-
-                return response;
+                return ProcessResponse(obj.GetResponse() as HttpWebResponse);
             }
-            catch(WebException)
+            catch(WebException ex)
             {
+                if (ex.Response != null)
+                {
+                    return ProcessResponse(ex.Response as HttpWebResponse);
+                }
+
                 return null;
             }
         }
+
+        public Response ProcessResponse(HttpWebResponse response)
+        {
+            var obj = new Response
+            {
+                Uri = response.ResponseUri,
+                StatusCode = response.StatusCode,
+            };
+
+            using (var stream = response.GetResponseStream())
+            {
+                if (stream != null && response.ContentLength > 0)
+                {
+                    var bytes = new byte[response.ContentLength];
+                    stream.Read(bytes, 0, (int)response.ContentLength);
+
+                    obj.Data = bytes;
+                }
+            }
+
+            foreach (var item in response.Headers.AllKeys)
+            {
+                obj.Headers.Add(item, response.Headers[item]);
+            }
+
+            return obj;
+        }
+
     }
 }
