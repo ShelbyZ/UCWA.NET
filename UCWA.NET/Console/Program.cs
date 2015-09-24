@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Text;
 using UCWA.NET.Core;
 using UCWA.NET.Resources;
 using UCWA.NET.SimpleTransport;
@@ -21,19 +20,22 @@ namespace Console
             _discovery = new Discovery(_proxy);
             _authentication = new Authentication(_proxy);
 
+            System.Console.WriteLine("Enter discovery domain");
+            var discoveryDomain = System.Console.ReadLine();
             System.Console.WriteLine("Enter username");
             var username = System.Console.ReadLine();
             System.Console.WriteLine("Enter password");
             var password = System.Console.ReadLine();
 
             System.Console.WriteLine("Starting discovery...");
-            var discoveryTask = _discovery.Start(username);
+            var discoveryTask = _discovery.Start(!string.IsNullOrWhiteSpace(discoveryDomain) ? discoveryDomain : username);
             discoveryTask.Wait();
+            var discoveryUri = new Uri(discoveryTask.Result.Links.User.Href);
 
             System.Console.WriteLine("Starting authentication");
             try
             {
-                var authenticationTask = _authentication.Start(discoveryTask.Result);
+                var authenticationTask = _authentication.Start(discoveryUri);
                 authenticationTask.Wait();
             }
             catch (AggregateException ex)
@@ -49,11 +51,12 @@ namespace Console
                     });
                     authTokenTask.Wait();
 
-                    var rootTask = _authentication.Start(discoveryTask.Result, authTokenTask.Result);
+                    var rootTask = _authentication.Start(discoveryUri, authTokenTask.Result);
                     rootTask.Wait();
 
                     if (rootTask.Result != null)
                     {
+                        System.Console.WriteLine("Creating Application");
                         var applications = new Applications
                         {
                             Culture = "en-US",
@@ -77,6 +80,8 @@ namespace Console
                     }
                 }
             }
+
+            System.Console.ReadLine();
         }
     }
 }

@@ -16,9 +16,18 @@ namespace UCWA.NET.Core
             _proxy = proxy;
         }
 
-        public async Task<Autodiscover> Start(string username)
+        public async Task<Autodiscover> Start(string domainOrUsername)
         {
-            var domain = new MailAddress(username).Host;
+            var domain = domainOrUsername;
+
+            try
+            {
+                domain = new MailAddress(domainOrUsername).Host;
+            }
+            catch (FormatException)
+            {
+            }
+
             var response = await DiscoverSection(true, domain);
             if (response == null || (response != null && response.Data == null))
             {

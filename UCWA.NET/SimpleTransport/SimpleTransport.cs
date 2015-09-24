@@ -82,6 +82,5 @@ namespace UCWA.NET.SimpleTransport
 
             return obj;
         }
-
     }
 }

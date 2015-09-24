@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using UCWA.NET.Resources;
 using UCWA.NET.Transport;
@@ -18,11 +19,11 @@ namespace UCWA.NET.Core
             _proxy = proxy;
         }
 
-        public async Task<Root> Start(Autodiscover autodiscover, AuthToken authToken = null)
+        public async Task<Root> Start(Uri uri, AuthToken authToken = null)
         {
             var request = new Request
             {
-                Uri = new Uri(autodiscover.Links.User.Href),
+                Uri = uri,
                 Method = HttpMethod.Get
             };
 
@@ -63,7 +64,7 @@ namespace UCWA.NET.Core
             if (credentials.GrantType == Constants.Windows)
             {
                 var cache = new CredentialCache();
-                cache.Add(uri, "NTLM", new NetworkCredential(credentials.Username, credentials.Password));
+                cache.Add(uri, "NTLM", new NetworkCredential(credentials.Username, credentials.Password, credentials.Domain));
                 request.Credentials = cache;
             }
 
