@@ -8,3 +8,4 @@ This solution intends to provide a set of assemblies that handles the basics (tr
 
 # Articles
 [UCWA.NET - Starting from Scratch](http://shagman.codes/blog/2015/09/17/ucwa-net-starting-from-scratch/)
+[UCWA.NET - Implementing Discovery and Authentication](http://shagman.codes/blog/2015/09/23/ucwa-net-implementing-discovery-and-authentication/)
