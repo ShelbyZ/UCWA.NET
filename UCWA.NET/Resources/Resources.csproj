@@ -36,7 +36,14 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Applications.cs" />
+    <Compile Include="Application.cs" />
+    <Compile Include="Communication.cs" />
+    <Compile Include="Event.cs" />
+    <Compile Include="Error.cs" />
+    <Compile Include="MakeMeAvailable.cs" />
+    <Compile Include="Me.cs" />
+    <Compile Include="OnlineMeetings.cs" />
+    <Compile Include="People.cs" />
     <Compile Include="Root.cs" />
     <Compile Include="AuthToken.cs" />
     <Compile Include="Autodiscover.cs" />

@@ -40,6 +40,9 @@
     <Compile Include="Credentials.cs" />
     <Compile Include="Discovery.cs" />
     <Compile Include="DiscoveryException.cs" />
+    <Compile Include="ErrorEventArgs.cs" />
+    <Compile Include="EventReceivedEventArgs.cs" />
+    <Compile Include="Events.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

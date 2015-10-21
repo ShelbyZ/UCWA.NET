@@ -1,8 +1,9 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 
 namespace UCWA.NET.Resources
 {
-    [DataContract]
+    [DataContract, Serializable]
     public class Resource
     {
     }

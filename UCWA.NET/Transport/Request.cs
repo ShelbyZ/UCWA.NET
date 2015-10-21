@@ -8,5 +8,7 @@ namespace UCWA.NET.Transport
         public HttpMethod Method { get; set; }
 
         public ICredentials Credentials { get; set; }
+
+        public int Timeout { get; set; }
     }
 }

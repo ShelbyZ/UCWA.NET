@@ -73,18 +73,18 @@ namespace UCWA.NET.Core
             {
                 var response = await _proxy.ExecuteRequestAsync(new Request
                 {
-                    Uri = new Uri(autodiscover.Links.Redirect.Href),
+                    Uri = new Uri(autodiscover.Links.Redirect.Href, UriKind.Relative),
                     Method = HttpMethod.Get
                 });
 
-                if (response != null)
-                {
-                    autodiscover = response.Data.FromBytes<Autodiscover>();
-                }
-                else
+                autodiscover = response?.Data?.FromBytes<Autodiscover>();
+
+                if (response == null)
                 {
                     throw new DiscoveryException(string.Format("Discovery followed redirect {0} and received null response", autodiscover.Links.Redirect.Href));
                 }
+
+                autodiscover = response?.Data?.FromBytes<Autodiscover>();
             }
 
             return autodiscover;

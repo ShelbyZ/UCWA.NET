@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using UCWA.NET.Resources;
 using UCWA.NET.Transport;
@@ -33,15 +32,18 @@ namespace UCWA.NET.Core
             }
 
             var response = await _proxy.ExecuteRequestAsync(request);
-            if (response != null)
+            if (response?.StatusCode == HttpStatusCode.Unauthorized)
             {
-                if (response.StatusCode == HttpStatusCode.Unauthorized)
+                throw new AuthenticationException(new Challenge(response.Headers["WWW-Authenticate"]), "Authentication failed due to challenge");
+            }
+            else
+            {
+                var root = response?.Data?.FromBytes<Root>();
+                if (root != null)
                 {
-                    throw new AuthenticationException(new Challenge(response.Headers["WWW-Authenticate"]), "Authentication failed due to challenge");
-                }
-                else if (response.Data != null)
-                {
-                    return response.Data.FromBytes<Root>();
+                    root.Baseuri = new Uri(new Uri(root.Links.Self.Href).GetLeftPart(UriPartial.Authority));
+                    _proxy.Baseuri = root.Baseuri;
+                    return root;
                 }
             }
 
@@ -69,12 +71,7 @@ namespace UCWA.NET.Core
             }
 
             var response = await _proxy.ExecuteRequestAsync(request);
-            if (response != null && response.Data != null)
-            {
-                return response.Data.FromBytes<AuthToken>();
-            }
-
-            return null;
+            return response?.Data?.FromBytes<AuthToken>();
         }
 
         private byte[] GetGrant(Credentials credentials)

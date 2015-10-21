@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 
 namespace UCWA.NET.Resources
 {
@@ -20,5 +21,7 @@ namespace UCWA.NET.Resources
 
         [DataMember(Name = "_links")]
         public LinksObject Links { get; set; }
+
+        public Uri Baseuri { get; set; }
     }
 }

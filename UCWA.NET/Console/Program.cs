@@ -57,7 +57,7 @@ namespace Console
                     if (rootTask.Result != null)
                     {
                         System.Console.WriteLine("Creating Application");
-                        var applications = new Applications
+                        var applications = new Application
                         {
                             Culture = "en-US",
                             EndpointId = Guid.NewGuid().ToString(),
@@ -75,13 +75,43 @@ namespace Console
                         });
                         if (response != null)
                         {
-
+                            applications = response.Data.FromBytes<Application>();
+                            if (applications != null)
+                            {
+                                var makeMeAvailable = new MakeMeAvailable
+                                {
+                                    SupportedModalities = new List<string> { "Messaging" }
+                                };
+                                response = _proxy.ExecuteRequest(new Request
+                                {
+                                    Uri = new Uri(applications.Embedded.Me.Links.MakeMeAvailable.Href, UriKind.Relative),
+                                    Method = HttpMethod.Post,
+                                    Headers = new Dictionary<string, string>
+                                    {
+                                        { "Content-Type", "application/json" }
+                                    },
+                                    Data = makeMeAvailable.ToBytes()
+                                });
+                                if (response != null)
+                                {
+                                    var events = new Events(_proxy, new Uri(applications.Links.Events.Href, UriKind.Relative));
+                                    events.OnEventReceived += OnEventReceived;
+                                    events.Start();
+                                }
+                            }
                         }
                     }
                 }
             }
 
             System.Console.ReadLine();
+        }
+
+        static void OnEventReceived(object sender, EventReceivedEventArgs e)
+        {
+            if (e.Resource != null)
+            {
+            }
         }
     }
 }

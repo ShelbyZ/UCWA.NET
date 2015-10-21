@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace UCWA.NET.Transport
@@ -8,6 +9,8 @@ namespace UCWA.NET.Transport
         private ITransport _transport;
 
         public string Authorization { get; set; }
+
+        public Uri Baseuri { get; set; }
 
         public TransportProxy(ITransport transport)
         {
@@ -21,9 +24,20 @@ namespace UCWA.NET.Transport
                 request.Headers = new Dictionary<string, string>();
             }
 
-            if (!request.Headers.ContainsKey("Authorization"))
+            if (!request.Headers.ContainsKey("Authorization") && Authorization != null)
             {
                 request.Headers.Add("Authorization", Authorization);
+            }
+
+            if (!request.Uri.IsAbsoluteUri)
+            {
+                request.Uri = new Uri(Baseuri, request.Uri);
+            }
+
+            if (request.Timeout == default(int))
+            {
+                // Default HttpWebRequest.Timeout value
+                request.Timeout = 100000;
             }
 
             return _transport.ExecuteRequest(request);

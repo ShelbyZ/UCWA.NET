@@ -9,15 +9,12 @@ namespace UCWA.NET.SimpleTransport
         {
             var obj = WebRequest.CreateHttp(request.Uri);
             obj.Method = request.Method.ToString();
-
-            if (request.Credentials != null)
-            {
-                obj.Credentials = request.Credentials;
-            }
+            obj.Credentials = request?.Credentials;
+            obj.Timeout = request.Timeout;
 
             if (request.Headers != null)
             {
-                foreach (var item in request.Headers)
+                foreach (var item in request?.Headers)
                 {
                     if (item.Key == "Content-Type")
                     {
@@ -34,10 +31,7 @@ namespace UCWA.NET.SimpleTransport
             {
                 using (var stream = obj.GetRequestStream())
                 {
-                    if (stream != null)
-                    {
-                        stream.Write(request.Data, 0, request.Data.Length);
-                    }
+                    stream?.Write(request.Data, 0, request.Data.Length);
                 }
             }
 
@@ -47,12 +41,7 @@ namespace UCWA.NET.SimpleTransport
             }
             catch(WebException ex)
             {
-                if (ex.Response != null)
-                {
-                    return ProcessResponse(ex.Response as HttpWebResponse);
-                }
-
-                return null;
+                return ex.Response != null ? ProcessResponse(ex.Response as HttpWebResponse) : null;
             }
         }
 
