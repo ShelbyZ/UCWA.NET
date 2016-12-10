@@ -29,7 +29,7 @@ namespace UCWA.NET.Resources
             public string Href { get; set; }
 
             [DataMember(Name = "events")]
-            public List<EventsObject> Events { get; set; }
+            public EventsObject[] Events { get; set; }
         }
 
         [DataContract]
