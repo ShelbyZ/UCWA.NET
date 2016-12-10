@@ -13,15 +13,9 @@ namespace UCWA.NET.Resources
         public string SignInAs { get; set; }
 
         [DataMember(Name = "supportedMessageFormats")]
-        public List<string> SupportedMessageFormats { get; set; }
+        public string[] SupportedMessageFormats { get; set; }
 
         [DataMember(Name = "supportedModalities")]
-        public List<string> SupportedModalities { get; set; }
-
-        public MakeMeAvailable()
-        {
-            SupportedMessageFormats = new List<string>();
-            SupportedModalities = new List<string>();
-        }
+        public string[] SupportedModalities { get; set; }
     }
 }

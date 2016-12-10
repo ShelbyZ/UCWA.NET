@@ -80,7 +80,7 @@ namespace Console
                             {
                                 var makeMeAvailable = new MakeMeAvailable
                                 {
-                                    SupportedModalities = new List<string> { "Messaging" }
+                                    SupportedModalities = new [] { "Messaging" }
                                 };
                                 response = _proxy.ExecuteRequest(new Request
                                 {
