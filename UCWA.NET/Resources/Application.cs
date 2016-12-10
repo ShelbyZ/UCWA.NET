@@ -57,5 +57,8 @@ namespace UCWA.NET.Resources
 
         [DataMember(Name = "rel", IsRequired = false, EmitDefaultValue = false)]
         public string Rel { get; set; }
+
+        [DataMember(Name = "etag", IsRequired = false, EmitDefaultValue = false)]
+        public string ETag { get; set; }
     }
 }
