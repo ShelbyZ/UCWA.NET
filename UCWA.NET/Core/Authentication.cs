@@ -80,7 +80,7 @@ namespace UCWA.NET.Core
 
             if (credentials.GrantType == Constants.Password)
             {
-                grant = string.Format("{0}&username={1}&password={2}", grant, credentials.Username, credentials.Password);
+                grant = string.Format("{0}&username={1}&password={2}", grant, Uri.EscapeUriString(credentials.Username), Uri.EscapeUriString(credentials.Password));
             }
 
             // TODO: support online meeting join
