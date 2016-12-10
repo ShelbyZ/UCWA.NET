@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 
 namespace UCWA.NET.Resources
 {
@@ -13,6 +11,9 @@ namespace UCWA.NET.Resources
             [DataMember(Name = "self")]
             public HrefObject Self { get; set; }
 
+            [DataMember(Name = "startPhoneAudio")]
+            public HrefObject StartPhoneAudio { get; set; }
+
             [DataMember(Name = "conversations")]
             public HrefObject Conversations { get; set; }
 
@@ -24,13 +25,16 @@ namespace UCWA.NET.Resources
 
             [DataMember(Name = "joinOnlineMeeting")]
             public HrefObject JoinOnlineMeeting { get; set; }
+
+            [DataMember(Name = "missedItems")]
+            public HrefObject MissedItems { get; set; }
         }
 
         [DataMember(Name = "supportedModalities")]
-        public List<string> SupportedModalities { get; set; }
+        public string[] SupportedModalities { get; set; }
 
         [DataMember(Name = "supportedMessageFormats")]
-        public List<string> SupportedMessageFormats { get; set; }
+        public string[] SupportedMessageFormats { get; set; }
 
         [DataMember(Name = "_links")]
         public LinksObject Links { get; set; }
