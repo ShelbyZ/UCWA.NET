@@ -45,7 +45,7 @@ namespace UCWA.NET.Transport
 
         public async Task<Response> ExecuteRequestAsync(Request request)
         {
-            return await Task.Run<Response>(() =>
+            return await Task.Run(() =>
             {
                 return ExecuteRequest(request);
             });

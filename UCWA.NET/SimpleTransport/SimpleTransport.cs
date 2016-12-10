@@ -12,18 +12,15 @@ namespace UCWA.NET.SimpleTransport
             obj.Credentials = request?.Credentials;
             obj.Timeout = request.Timeout;
 
-            if (request.Headers != null)
+            foreach (var item in request?.Headers)
             {
-                foreach (var item in request?.Headers)
+                if (item.Key == "Content-Type")
                 {
-                    if (item.Key == "Content-Type")
-                    {
-                        obj.ContentType = item.Value;
-                    }
-                    else
-                    {
-                        obj.Headers.Add(item.Key, item.Value);
-                    }
+                    obj.ContentType = item.Value;
+                }
+                else
+                {
+                    obj.Headers.Add(item.Key, item.Value);
                 }
             }
 
@@ -57,10 +54,12 @@ namespace UCWA.NET.SimpleTransport
             {
                 if (stream != null && response.ContentLength > 0)
                 {
-                    var bytes = new byte[response.ContentLength];
-                    stream.Read(bytes, 0, (int)response.ContentLength);
-
-                    obj.Data = bytes;
+                    obj.Data = new byte[response.ContentLength];
+                    var pos = 0;
+                    while (pos < obj.Data.Length)
+                    {
+                        pos += stream.Read(obj.Data, pos, obj.Data.Length - pos);
+                    }
                 }
             }
 
@@ -68,6 +67,8 @@ namespace UCWA.NET.SimpleTransport
             {
                 obj.Headers.Add(item, response.Headers[item]);
             }
+
+            response.Close();
 
             return obj;
         }
