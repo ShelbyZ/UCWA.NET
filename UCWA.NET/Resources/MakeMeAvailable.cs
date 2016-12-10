@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 
 namespace UCWA.NET.Resources
 {
@@ -12,10 +11,10 @@ namespace UCWA.NET.Resources
         [DataMember(Name = "signInAs", IsRequired = false, EmitDefaultValue = false)]
         public string SignInAs { get; set; }
 
-        [DataMember(Name = "supportedMessageFormats")]
+        [DataMember(Name = "supportedMessageFormats", IsRequired = false, EmitDefaultValue = false)]
         public string[] SupportedMessageFormats { get; set; }
 
-        [DataMember(Name = "supportedModalities")]
+        [DataMember(Name = "supportedModalities", IsRequired = false, EmitDefaultValue = false)]
         public string[] SupportedModalities { get; set; }
     }
 }
