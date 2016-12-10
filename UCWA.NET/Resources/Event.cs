@@ -59,6 +59,6 @@ namespace UCWA.NET.Resources
         public LinksObject Links { get; set; }
 
         [DataMember(Name = "sender")]
-        public List<SenderObject> Sender { get; set; }
+        public SenderObject[] Sender { get; set; }
     }
 }
