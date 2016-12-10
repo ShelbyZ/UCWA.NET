@@ -14,6 +14,12 @@ namespace UCWA.NET.Resources
             [DataMember(Name = "makeMeAvailable")]
             public HrefObject MakeMeAvailable { get; set; }
 
+            [DataMember(Name = "callForwardingSettings")]
+            public HrefObject CallForwardingSettings { get; set; }
+
+            [DataMember(Name = "phones")]
+            public HrefObject Phones { get; set; }
+
             [DataMember(Name = "photo")]
             public HrefObject Photo { get; set; }
         }
@@ -23,6 +29,9 @@ namespace UCWA.NET.Resources
 
         [DataMember(Name = "uri")]
         public string Uri { get; set; }
+
+        [DataMember(Name = "emailAddresses")]
+        public string[] EmailAddresses { get; set; }
 
         [DataMember(Name = "_links")]
         public LinksObject Links { get; set; }
