@@ -31,7 +31,8 @@ namespace UCWA.NET.Resources
         {
             return new DataContractJsonSerializer(typeof(T), new DataContractJsonSerializerSettings
             {
-                UseSimpleDictionaryFormat = true
+                UseSimpleDictionaryFormat = true,
+                DataContractSurrogate = new ResourceSurrogate()
             });
         }
     }
