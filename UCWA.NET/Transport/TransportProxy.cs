@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace UCWA.NET.Transport
@@ -17,16 +18,31 @@ namespace UCWA.NET.Transport
             _transport = transport;
         }
 
+        [Obsolete("Use ExecuteRequestAsync(...)")]
         public Response ExecuteRequest(Request request)
+        {
+            PrepareRequest(request);
+
+            return _transport.ExecuteRequest(request);
+        }
+
+        public async Task<Response> ExecuteRequestAsync(Request request)
+        {
+            PrepareRequest(request);
+
+            return await _transport.ExecuteRequestAsync(request);
+        }
+
+        private void PrepareRequest(Request request)
         {
             if (request.Headers == null)
             {
                 request.Headers = new Dictionary<string, string>();
             }
 
-            if (!request.Headers.ContainsKey("Authorization") && Authorization != null)
+            if (!request.Headers.ContainsKey(HttpRequestHeader.Authorization.ToString()) && Authorization != null)
             {
-                request.Headers.Add("Authorization", Authorization);
+                request.Headers.Add(HttpRequestHeader.Authorization.ToString(), Authorization);
             }
 
             if (!request.Uri.IsAbsoluteUri)
@@ -39,16 +55,6 @@ namespace UCWA.NET.Transport
                 // Default HttpWebRequest.Timeout value
                 request.Timeout = 100000;
             }
-
-            return _transport.ExecuteRequest(request);
-        }
-
-        public async Task<Response> ExecuteRequestAsync(Request request)
-        {
-            return await Task.Run(() =>
-            {
-                return ExecuteRequest(request);
-            });
         }
     }
 }
