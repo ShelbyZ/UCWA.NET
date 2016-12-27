@@ -86,6 +86,7 @@ namespace UCWA.NET.Core
                 if (evt != null)
                 {
                     EventsUri = new Uri(evt.Links?.Resync?.Href ?? evt.Links.Next.Href, UriKind.Relative);
+                    if (evt.Links?.Resync == null)
                     {
                         OnEventReceived?.Invoke(this, new EventReceivedEventArgs
                         {
