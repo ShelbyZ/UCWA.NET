@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace UCWA.NET.Resources
@@ -6,8 +8,6 @@ namespace UCWA.NET.Resources
     [DataContract]
     public class Communication : Resource
     {
-        private IDictionary<string, object> _extra_data;
-
         [DataContract]
         public class LinksObject
         {
@@ -48,14 +48,9 @@ namespace UCWA.NET.Resources
         [DataMember(Name = "etag")]
         public string ETag { get; set; }
 
-        public void SetExtraData(KeyValuePair<string, object> item)
-        {
-            if (_extra_data == null)
-            {
-                _extra_data = new Dictionary<string, object>();
-            }
-
-            _extra_data.Add(item);
-        }
+        [JsonExtensionData]
+#pragma warning disable 0169
+        private IDictionary<string, JToken> _extra_data;
+#pragma warning restore 0169
     }
 }

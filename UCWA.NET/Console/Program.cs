@@ -63,7 +63,7 @@ namespace Console
                             EndpointId = Guid.NewGuid().ToString(),
                             UserAgent = "tester"
                         };
-                        var response = _proxy.ExecuteRequest(new Request
+                        var appTask = _proxy.ExecuteRequestAsync(new Request
                         {
                             Uri = new Uri(rootTask.Result.Links.Applications.Href),
                             Method = HttpMethod.Post,
@@ -73,16 +73,18 @@ namespace Console
                             },
                             Data = applications.ToBytes()
                         });
-                        if (response != null)
+                        appTask.Wait();
+
+                        if (appTask.Result != null)
                         {
-                            applications = response.Data.FromBytes<Application>();
+                            applications = appTask.Result.Data.FromBytes<Application>();
                             if (applications != null)
                             {
                                 var makeMeAvailable = new MakeMeAvailable
                                 {
                                     SupportedModalities = new [] { "Messaging" }
                                 };
-                                response = _proxy.ExecuteRequest(new Request
+                                var makeMeAvailableTask = _proxy.ExecuteRequestAsync(new Request
                                 {
                                     Uri = new Uri(applications.Embedded.Me.Links.MakeMeAvailable.Href, UriKind.Relative),
                                     Method = HttpMethod.Post,
@@ -92,7 +94,9 @@ namespace Console
                                     },
                                     Data = makeMeAvailable.ToBytes()
                                 });
-                                if (response != null)
+                                makeMeAvailableTask.Wait();
+
+                                if (makeMeAvailableTask.Result != null)
                                 {
                                     var events = new Events(_proxy, new Uri(applications.Links.Events.Href, UriKind.Relative));
                                     events.OnEventReceived += OnEventReceived;

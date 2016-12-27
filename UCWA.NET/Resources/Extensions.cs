@@ -1,5 +1,5 @@
-﻿using System.IO;
-using System.Runtime.Serialization.Json;
+﻿using Newtonsoft.Json;
+using System.IO;
 
 namespace UCWA.NET.Resources
 {
@@ -8,31 +8,31 @@ namespace UCWA.NET.Resources
         public static T FromBytes<T>(this byte[] bytes)
             where T : Resource
         {
-            var serializer = CreateSerializer<T>();
             using (var stream = new MemoryStream(bytes))
+            using (var reader = new StreamReader(stream))
             {
-                return serializer.ReadObject(stream) as T;
+                return CreateSerializer().Deserialize(reader, typeof(T)) as T;
             }
         }
 
         public static byte[] ToBytes<T>(this T obj)
             where T : Resource
         {
-            var serializer = CreateSerializer<T>();
             using (var stream = new MemoryStream())
+            using (var writer = new StreamWriter(stream))
             {
-                serializer.WriteObject(stream, obj);
+                CreateSerializer().Serialize(writer, obj);
+                writer.Flush();
                 return stream.ToArray();
             }
         }
 
-        private static DataContractJsonSerializer CreateSerializer<T>()
-            where T : Resource
+        private static JsonSerializer CreateSerializer()
         {
-            return new DataContractJsonSerializer(typeof(T), new DataContractJsonSerializerSettings
+            return JsonSerializer.Create(new JsonSerializerSettings
             {
-                UseSimpleDictionaryFormat = true,
-                DataContractSurrogate = new ResourceSurrogate()
+                DateFormatHandling = DateFormatHandling.MicrosoftDateFormat,
+                NullValueHandling = NullValueHandling.Ignore
             });
         }
     }
