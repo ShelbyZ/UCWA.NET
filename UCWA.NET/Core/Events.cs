@@ -71,12 +71,14 @@ namespace UCWA.NET.Core
 
         private void EventLoop()
         {
-            var response = _proxy.ExecuteRequest(new Request
+            var task = _proxy.ExecuteRequestAsync(new Request
             {
                 Uri = EventsUri,
                 Method = HttpMethod.Get,
                 Timeout = Timeout.Infinite
             });
+            task.Wait();
+            var response = task.Result;
 
             if (response.StatusCode == HttpStatusCode.OK)
             {
@@ -84,7 +86,6 @@ namespace UCWA.NET.Core
                 if (evt != null)
                 {
                     EventsUri = new Uri(evt.Links?.Resync?.Href ?? evt.Links.Next.Href, UriKind.Relative);
-                    if (evt.Links?.Resync != null)
                     {
                         OnEventReceived?.Invoke(this, new EventReceivedEventArgs
                         {
