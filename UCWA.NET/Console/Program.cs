@@ -115,6 +115,7 @@ namespace Console
         {
             if (e.Resource != null)
             {
+                System.Console.WriteLine("Received Event {0}", (e.Resource as Event).Links.Self.Href);
             }
         }
     }
