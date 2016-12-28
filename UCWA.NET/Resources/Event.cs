@@ -39,10 +39,18 @@ namespace UCWA.NET.Resources
             public LinkObject Link { get; set; }
 
             [DataMember(Name = "_embedded")]
-            public Dictionary<string, Dictionary<string, object>> Embedded { get; set; }
+            private Dictionary<string, Dictionary<string, object>> _embedded { get; set; }
+
+            public Resource Embedded { get; set; }
 
             [DataMember(Name = "type")]
             public string Type { get; set; }
+
+            [OnDeserialized]
+            internal void OnDeserializedMethod(StreamingContext context)
+            {
+                Embedded = _embedded.GetResource();
+            }
         }
 
         [DataContract]

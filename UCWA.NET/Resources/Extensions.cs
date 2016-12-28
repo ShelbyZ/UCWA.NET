@@ -1,4 +1,6 @@
 ﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace UCWA.NET.Resources
@@ -25,6 +27,23 @@ namespace UCWA.NET.Resources
                 writer.Flush();
                 return stream.ToArray();
             }
+        }
+
+        public static Resource GetResource(this Dictionary<string, Dictionary<string, object>> data)
+        {
+            if (data != null)
+            {
+                foreach (var item in data)
+                {
+                    var json = JsonConvert.SerializeObject(item.Value);
+                    var type = string.Format("UCWA.NET.Resources.{0}{1}, UCWA.NET.Resources", char.ToUpper(item.Key[0]), item.Key.Substring(1));
+                    var t = Type.GetType(type);
+
+                    return JsonConvert.DeserializeObject(json, Type.GetType(type)) as Resource;
+                }
+            }
+
+            return default(Resource);
         }
 
         private static JsonSerializer CreateSerializer()
