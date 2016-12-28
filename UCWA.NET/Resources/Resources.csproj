@@ -48,7 +48,6 @@
     <Compile Include="Me.cs" />
     <Compile Include="OnlineMeetings.cs" />
     <Compile Include="People.cs" />
-    <Compile Include="ResourceSurrogate.cs" />
     <Compile Include="Root.cs" />
     <Compile Include="AuthToken.cs" />
     <Compile Include="Autodiscover.cs" />
