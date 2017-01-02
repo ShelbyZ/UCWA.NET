@@ -20,21 +20,19 @@ namespace UCWA.NET.Core
 
         public async Task<Root> Start(Uri uri, AuthToken authToken = null)
         {
-            var request = new Request
-            {
-                Uri = uri,
-                Method = HttpMethod.Get
-            };
-
             if (authToken != null)
             {
                 _proxy.Authorization = string.Format("{0} {1}", authToken.TokenType, authToken.AccessToken);
             }
 
-            var response = await _proxy.ExecuteRequestAsync(request);
+            var response = await _proxy.ExecuteRequestAsync(new Request
+            {
+                Uri = uri,
+                Method = HttpMethod.Get
+            });
             if (response?.StatusCode == HttpStatusCode.Unauthorized)
             {
-                throw new AuthenticationException(new Challenge(response.Headers["WWW-Authenticate"]), "Authentication failed due to challenge");
+                throw new AuthenticationException(new Challenge(response.Headers[Constants.WwwAuthenticate]), "Authentication failed due to challenge");
             }
             else
             {
@@ -58,7 +56,7 @@ namespace UCWA.NET.Core
                 Method = HttpMethod.Post,
                 Headers = new Dictionary<string, string>
                 {
-                    { "Content-Type", "application/x-www-form-urlencoded;charset=UTF-8" }
+                    { Constants.ContentType, Constants.XWwwFormUrlencoded }
                 },
                 Data = GetGrant(credentials)
             };

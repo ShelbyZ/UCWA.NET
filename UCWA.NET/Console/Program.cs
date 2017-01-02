@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Threading;
 using UCWA.NET.Core;
@@ -42,7 +43,7 @@ namespace Console
             }
             catch (AggregateException ex)
             {
-                if (ex != null && ex.InnerException.GetType() == typeof(AuthenticationException))
+                if (ex?.InnerException.GetType() == typeof(AuthenticationException))
                 {
                     var challenge = (ex.InnerException as AuthenticationException).Challenge;
                     var authTokenTask = _authentication.GetAuthToken(challenge.MsRtcOAuth, new Credentials
@@ -71,13 +72,13 @@ namespace Console
                             Method = HttpMethod.Post,
                             Headers = new Dictionary<string, string>
                             {
-                                { "Content-Type", "application/json" }
+                                { Constants.ContentType, Constants.Json }
                             },
                             Data = applications.ToBytes()
                         });
                         appTask.Wait();
 
-                        if (appTask.Result != null)
+                        if (appTask?.Result?.StatusCode == HttpStatusCode.Created)
                         {
                             applications = appTask.Result.Data.FromBytes<Application>();
                             if (applications != null)
@@ -92,18 +93,20 @@ namespace Console
                                     Method = HttpMethod.Post,
                                     Headers = new Dictionary<string, string>
                                     {
-                                        { "Content-Type", "application/json" }
+                                        { Constants.ContentType, Constants.Json }
                                     },
                                     Data = makeMeAvailable.ToBytes()
                                 });
                                 makeMeAvailableTask.Wait();
 
-                                if (makeMeAvailableTask.Result != null)
+                                if (makeMeAvailableTask?.Result.StatusCode == HttpStatusCode.NoContent)
                                 {
+                                    // Start events loop
                                     var events = new Events(_proxy, new Uri(applications.Links.Events.Href, UriKind.Relative));
                                     events.OnEventReceived += OnEventReceived;
                                     events.Start();
 
+                                    // Request and start reportMyActivity loop
                                     var meTask = _proxy.ExecuteRequestAsync(new Request
                                     {
                                         Uri = new Uri(applications.Embedded.Me.Links.Self.Href, UriKind.Relative),
@@ -111,10 +114,41 @@ namespace Console
                                     });
                                     meTask.Wait();
 
-                                    if (meTask.Result != null)
+                                    if (meTask?.Result?.StatusCode == HttpStatusCode.OK)
                                     {
                                         var me = meTask.Result.Data.FromBytes<Me>();
                                         _timer = new Timer(ReportMyActivity, me.Links.ReportMyActivity.Href, 0, (int)(3.5 * 60 * 1000));
+                                    }
+
+                                    // Request and update communication
+                                    var commGetTask = _proxy.ExecuteRequestAsync(new Request
+                                    {
+                                        Uri = new Uri(applications.Embedded.Communication.Links.Self.Href, UriKind.Relative),
+                                        Method = HttpMethod.Get
+                                    });
+                                    commGetTask.Wait();
+
+                                    if (commGetTask?.Result?.StatusCode == HttpStatusCode.OK)
+                                    {
+                                        var comm = commGetTask.Result.Data.FromBytes<Communication>();
+                                        comm.SupportedMessageFormats.Add("Html");
+                                        var commTask = _proxy.ExecuteRequestAsync(new Request
+                                        {
+                                            Uri = new Uri(applications.Embedded.Communication.Links.Self.Href, UriKind.Relative),
+                                            Method = HttpMethod.Put,
+                                            Headers = new Dictionary<string, string>
+                                            {
+                                                { Constants.ContentType, Constants.Json },
+                                                { Constants.IfMatch, string.Format("\"{0}\"", comm.ETag) }
+                                            },
+                                            Data = comm.ToBytes()
+                                        });
+                                        commTask.Wait();
+
+                                        if (commTask?.Result?.StatusCode == HttpStatusCode.NoContent)
+                                        {
+                                            System.Console.WriteLine("Communication Updated");
+                                        }
                                     }
                                 }
                             }

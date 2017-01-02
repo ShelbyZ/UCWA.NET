@@ -78,9 +78,9 @@ namespace UCWA.NET.Core
                 Timeout = Timeout.Infinite
             });
             task.Wait();
-            var response = task.Result;
 
-            if (response.StatusCode == HttpStatusCode.OK)
+            var response = task.Result;
+            if (response?.StatusCode == HttpStatusCode.OK)
             {
                 var evt = response?.Data?.FromBytes<Event>();
                 if (evt != null)
@@ -95,7 +95,7 @@ namespace UCWA.NET.Core
                     }
                 }
             }
-            else if (response.StatusCode == HttpStatusCode.Conflict)
+            else if (response?.StatusCode == HttpStatusCode.Conflict)
             {
                 _error = response?.Data?.FromBytes<Error>();
                 Stop();
