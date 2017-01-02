@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading;
 using UCWA.NET.Core;
 using UCWA.NET.Resources;
 using UCWA.NET.SimpleTransport;
@@ -13,6 +14,7 @@ namespace Console
         static TransportProxy _proxy;
         static Discovery _discovery;
         static Authentication _authentication;
+        static Timer _timer;
 
         static void Main(string[] args)
         {
@@ -101,6 +103,19 @@ namespace Console
                                     var events = new Events(_proxy, new Uri(applications.Links.Events.Href, UriKind.Relative));
                                     events.OnEventReceived += OnEventReceived;
                                     events.Start();
+
+                                    var meTask = _proxy.ExecuteRequestAsync(new Request
+                                    {
+                                        Uri = new Uri(applications.Embedded.Me.Links.Self.Href, UriKind.Relative),
+                                        Method = HttpMethod.Get
+                                    });
+                                    meTask.Wait();
+
+                                    if (meTask.Result != null)
+                                    {
+                                        var me = meTask.Result.Data.FromBytes<Me>();
+                                        _timer = new Timer(ReportMyActivity, me.Links.ReportMyActivity.Href, 0, (int)(3.5 * 60 * 1000));
+                                    }
                                 }
                             }
                         }
@@ -109,6 +124,8 @@ namespace Console
             }
 
             System.Console.ReadLine();
+            _timer.Dispose();
+            _timer = null;
         }
 
         static void OnEventReceived(object sender, EventReceivedEventArgs e)
@@ -117,6 +134,16 @@ namespace Console
             {
                 System.Console.WriteLine("Received Event {0}", (e.Resource as Event).Links.Self.Href);
             }
+        }
+
+        static void ReportMyActivity(object o)
+        {
+            var task = _proxy.ExecuteRequestAsync(new Request
+            {
+                Uri = new Uri(o as string, UriKind.Relative),
+                Method = HttpMethod.Post
+            });
+            task.Wait();
         }
     }
 }
