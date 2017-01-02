@@ -11,14 +11,17 @@ namespace UCWA.NET.Resources
         [DataContract]
         public class LinksObject
         {
-            [DataMember(Name = "self")]
-            public HrefObject Self { get; set; }
-
-            [DataMember(Name = "startPhoneAudio")]
-            public HrefObject StartPhoneAudio { get; set; }
-
             [DataMember(Name = "conversations")]
             public HrefObject Conversations { get; set; }
+
+            [DataMember(Name = "joinOnlineMeeting")]
+            public HrefObject JoinOnlineMeeting { get; set; }
+
+            [DataMember(Name = "missedItems")]
+            public HrefObject MissedItems { get; set; }
+
+            [DataMember(Name = "self")]
+            public HrefObject Self { get; set; }
 
             [DataMember(Name = "startMessaging")]
             public HrefObject StartMessaging { get; set; }
@@ -26,11 +29,8 @@ namespace UCWA.NET.Resources
             [DataMember(Name = "startOnlineMeeting")]
             public HrefObject StartOnlineMeeting { get; set; }
 
-            [DataMember(Name = "joinOnlineMeeting")]
-            public HrefObject JoinOnlineMeeting { get; set; }
-
-            [DataMember(Name = "missedItems")]
-            public HrefObject MissedItems { get; set; }
+            [DataMember(Name = "startPhoneAudio")]
+            public HrefObject StartPhoneAudio { get; set; }
         }
 
         [DataMember(Name = "supportedModalities")]

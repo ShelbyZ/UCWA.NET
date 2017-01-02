@@ -11,17 +11,29 @@ namespace UCWA.NET.Resources
             [DataMember(Name = "self")]
             public HrefObject Self { get; set; }
 
+            [DataMember(Name = "callForwardingSettings")]
+            public HrefObject CallForwardingSettings { get; set; }
+
+            [DataMember(Name = "location")]
+            public HrefObject Location { get; set; }
+
             [DataMember(Name = "makeMeAvailable")]
             public HrefObject MakeMeAvailable { get; set; }
 
-            [DataMember(Name = "callForwardingSettings")]
-            public HrefObject CallForwardingSettings { get; set; }
+            [DataMember(Name = "note")]
+            public HrefObject Note { get; set; }
 
             [DataMember(Name = "phones")]
             public HrefObject Phones { get; set; }
 
             [DataMember(Name = "photo")]
             public HrefObject Photo { get; set; }
+
+            [DataMember(Name = "presence")]
+            public HrefObject Presence { get; set; }
+
+            [DataMember(Name = "reportMyActivity")]
+            public HrefObject ReportMyActivity { get; set; }
         }
 
         [DataMember(Name = "name")]
