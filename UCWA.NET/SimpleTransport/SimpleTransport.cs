@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using UCWA.NET.Transport;
 
@@ -22,7 +23,7 @@ namespace UCWA.NET.SimpleTransport
             {
                 return ProcessResponse(obj.GetResponse() as HttpWebResponse);
             }
-            catch(WebException ex)
+            catch (WebException ex)
             {
                 return ProcessResponse(ex.Response as HttpWebResponse);
             }
@@ -67,6 +68,11 @@ namespace UCWA.NET.SimpleTransport
                 {
                     obj.Headers.Add(item.Key, item.Value);
                 }
+            }
+
+            if (request.Method == HttpMethod.Post && request.Data == null)
+            {
+                obj.ContentLength = 0;
             }
 
             return obj;
