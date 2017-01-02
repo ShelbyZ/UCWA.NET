@@ -34,10 +34,10 @@ namespace UCWA.NET.Resources
         }
 
         [DataMember(Name = "supportedModalities")]
-        public string[] SupportedModalities { get; set; }
+        public IList<string> SupportedModalities { get; set; }
 
         [DataMember(Name = "supportedMessageFormats")]
-        public string[] SupportedMessageFormats { get; set; }
+        public IList<string> SupportedMessageFormats { get; set; }
 
         [DataMember(Name = "_links")]
         public LinksObject Links { get; set; }
