@@ -12,16 +12,10 @@ namespace UCWA.NET.Resources
         [DataMember(Name = "signInAs", IsRequired = false, EmitDefaultValue = false)]
         public string SignInAs { get; set; }
 
-        [DataMember(Name = "supportedMessageFormats")]
-        public List<string> SupportedMessageFormats { get; set; }
+        [DataMember(Name = "supportedMessageFormats", IsRequired = false, EmitDefaultValue = false)]
+        public IList<string> SupportedMessageFormats { get; set; }
 
-        [DataMember(Name = "supportedModalities")]
-        public List<string> SupportedModalities { get; set; }
-
-        public MakeMeAvailable()
-        {
-            SupportedMessageFormats = new List<string>();
-            SupportedModalities = new List<string>();
-        }
+        [DataMember(Name = "supportedModalities", IsRequired = false, EmitDefaultValue = false)]
+        public IList<string> SupportedModalities { get; set; }
     }
 }

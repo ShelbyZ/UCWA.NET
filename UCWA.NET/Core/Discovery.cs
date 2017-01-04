@@ -77,8 +77,6 @@ namespace UCWA.NET.Core
                     Method = HttpMethod.Get
                 });
 
-                autodiscover = response?.Data?.FromBytes<Autodiscover>();
-
                 if (response == null)
                 {
                     throw new DiscoveryException(string.Format("Discovery followed redirect {0} and received null response", autodiscover.Links.Redirect.Href));

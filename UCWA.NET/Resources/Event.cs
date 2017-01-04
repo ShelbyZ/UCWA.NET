@@ -29,7 +29,7 @@ namespace UCWA.NET.Resources
             public string Href { get; set; }
 
             [DataMember(Name = "events")]
-            public List<EventsObject> Events { get; set; }
+            public EventsObject[] Events { get; set; }
         }
 
         [DataContract]
@@ -39,10 +39,18 @@ namespace UCWA.NET.Resources
             public LinkObject Link { get; set; }
 
             [DataMember(Name = "_embedded")]
-            public Dictionary<string, Dictionary<string, object>> Embedded { get; set; }
+            private Dictionary<string, Dictionary<string, object>> _embedded { get; set; }
+
+            public Resource Embedded { get; set; }
 
             [DataMember(Name = "type")]
             public string Type { get; set; }
+
+            [OnDeserialized]
+            internal void OnDeserializedMethod(StreamingContext context)
+            {
+                Embedded = _embedded.GetResource();
+            }
         }
 
         [DataContract]
@@ -59,6 +67,6 @@ namespace UCWA.NET.Resources
         public LinksObject Links { get; set; }
 
         [DataMember(Name = "sender")]
-        public List<SenderObject> Sender { get; set; }
+        public SenderObject[] Sender { get; set; }
     }
 }

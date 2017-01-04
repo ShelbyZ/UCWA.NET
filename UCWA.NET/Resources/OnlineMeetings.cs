@@ -11,6 +11,9 @@ namespace UCWA.NET.Resources
             [DataMember(Name = "self")]
             public HrefObject Self { get; set; }
 
+            [DataMember(Name = "myAssignedOnlineMeeting")]
+            public HrefObject MyAssignedOnlineMeeting { get; set; }
+
             [DataMember(Name = "myOnlineMeetings")]
             public HrefObject MyOnlineMeetings { get; set; }
 
@@ -28,9 +31,6 @@ namespace UCWA.NET.Resources
 
             [DataMember(Name = "phoneDialInInformation")]
             public HrefObject PhoneDialInInformation { get; set; }
-
-            [DataMember(Name = "myAssignedOnlineMeeting")]
-            public HrefObject MyAssignedOnlineMeeting { get; set; }
         }
 
         [DataMember(Name = "_links")]

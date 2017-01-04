@@ -7,5 +7,8 @@ namespace UCWA.NET.Resources
     {
         [DataMember(Name = "href")]
         public string Href { get; set; }
+
+        [DataMember(Name = "revision", IsRequired = false, EmitDefaultValue = false)]
+        public string Revision { get; set; }
     }
 }

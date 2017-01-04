@@ -1,6 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Runtime.Serialization.Json;
 
 namespace UCWA.NET.Resources
 {
@@ -9,29 +10,48 @@ namespace UCWA.NET.Resources
         public static T FromBytes<T>(this byte[] bytes)
             where T : Resource
         {
-            var serializer = CreateSerializer(typeof(T));
             using (var stream = new MemoryStream(bytes))
+            using (var reader = new StreamReader(stream))
             {
-                return serializer.ReadObject(stream) as T;
+                return CreateSerializer().Deserialize(reader, typeof(T)) as T;
             }
         }
 
         public static byte[] ToBytes<T>(this T obj)
             where T : Resource
         {
-            var serializer = CreateSerializer(typeof(T));
             using (var stream = new MemoryStream())
+            using (var writer = new StreamWriter(stream))
             {
-                serializer.WriteObject(stream, obj);
+                CreateSerializer().Serialize(writer, obj);
+                writer.Flush();
                 return stream.ToArray();
             }
         }
 
-        private static DataContractJsonSerializer CreateSerializer(Type type)
+        public static Resource GetResource(this Dictionary<string, Dictionary<string, object>> data)
         {
-            return new DataContractJsonSerializer(type, new DataContractJsonSerializerSettings
+            if (data != null)
             {
-                UseSimpleDictionaryFormat = true
+                foreach (var item in data)
+                {
+                    var json = JsonConvert.SerializeObject(item.Value);
+                    var type = string.Format("UCWA.NET.Resources.{0}{1}, UCWA.NET.Resources", char.ToUpper(item.Key[0]), item.Key.Substring(1));
+                    var t = Type.GetType(type);
+
+                    return JsonConvert.DeserializeObject(json, Type.GetType(type)) as Resource;
+                }
+            }
+
+            return default(Resource);
+        }
+
+        private static JsonSerializer CreateSerializer()
+        {
+            return JsonSerializer.Create(new JsonSerializerSettings
+            {
+                DateFormatHandling = DateFormatHandling.MicrosoftDateFormat,
+                NullValueHandling = NullValueHandling.Ignore
             });
         }
     }

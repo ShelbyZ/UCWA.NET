@@ -4,8 +4,12 @@
     {
         // Headers
         public readonly static string Authorization = "Authorization";
+        public readonly static string ContentType = "Content-Type";
+        public readonly static string IfMatch = "If-Match";
+        public readonly static string WwwAuthenticate = "WWW-Authenticate";
 
         // Content & Accept types
+        public readonly static string Json = "application/json";
         public readonly static string XWwwFormUrlencoded = "application/x-www-form-urlencoded;charset=UTF-8";
 
         // grant_types
